@@ -14,7 +14,7 @@ export class Collection<T> extends Array<T> {
   }
 
   groupBy<K extends string | number | symbol>(key: keyof T | ((item: T) => K)): Record<K, T[]> {
-    const map = {} as Record<K, T[]>;
+    const map: Record<K, T[]> = {} as any;
     this.forEach((item) => {
       const group = typeof key === 'function' ? key(item) : (item[key] as K);
       if (!map[group]) {
