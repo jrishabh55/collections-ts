@@ -98,7 +98,7 @@ test('Collection.swap', () => {
 });
 
 test('Collection.randomize', () => {
-  const collection = new Collection(1, 2, 3);
+  const collection = new Collection(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
   expect(collection.randomize()).not.toEqual(collection);
 });
 

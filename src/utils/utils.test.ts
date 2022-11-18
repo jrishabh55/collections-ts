@@ -64,7 +64,7 @@ describe('Clone Deep test', () => {
     const obj = { a: 1, b: 2, c: [[1, 2, 3], { d: 4, e: 5 }] };
     const cloned = cloneDeep(obj);
     expect(cloned).toEqual(obj);
-    (obj.c[0] as Array<number>).push(4);
+    (obj.c[0] as number[]).push(4);
     expect(cloned).not.toEqual(obj);
   });
 

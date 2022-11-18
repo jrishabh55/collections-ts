@@ -17,10 +17,10 @@ export const cloneDeep = <T extends object | Function>(obj: T): T => {
   }
 
   if (typeof obj === 'object' && obj !== null) {
-    return Object.entries(obj).reduce((acc, [key, value]) => {
+    return Object.entries(obj).reduce<any>((acc, [key, value]) => {
       acc[key] = cloneDeep(value);
       return acc;
-    }, {} as any);
+    }, {});
   }
 
   if (typeof obj === 'function') {
