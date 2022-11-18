@@ -1,8 +1,8 @@
-export class Collection<T> extends Array<T> {
+import { cloneDeep, shuffle } from '../utils/utils';
 
-  // create a new collection from the results of a callback
+export class Collection<T> extends Array<T> {
   map<U>(callback: (value: T, index: number, array: T[]) => U): Collection<U> {
-    return new Collection(...super.map(callback));
+    return c(...super.map(callback));
   }
 
   last(): T {
@@ -13,14 +13,14 @@ export class Collection<T> extends Array<T> {
     return this.filter((i) => i !== item);
   }
 
-  groupBy<K extends string | number | symbol>(key: (item: T) => K): Record<K, T[]> {
-    const map: Record<K, T[]> = {} as Record<K, T[]>;
+  groupBy<K extends string | number | symbol>(key: keyof T | ((item: T) => K)): Record<K, T[]> {
+    const map = {} as Record<K, T[]>;
     this.forEach((item) => {
-      const group = key(item);
+      const group = typeof key === 'function' ? key(item) : (item[key] as K);
       if (!map[group]) {
-        map[group] = new Collection();
+        map[group] = c();
       }
-      map[group]!.push(item);
+      map[group].push(item);
     });
     return map;
   }
@@ -43,15 +43,19 @@ export class Collection<T> extends Array<T> {
   }
 
   add(item: T) {
-    return new Collection(...this, item);
+    return c(...this, item);
   }
 
   delete(item: T) {
     return this.remove(item);
   }
 
-  deleteAll(items: T[]) {
+  deleteAll(...items: T[]) {
     return this.filter((item) => !items.includes(item));
+  }
+
+  deleteBy(key: keyof T, value: T[keyof T]) {
+    return this.filter((item) => item[key] !== value);
   }
 
   swap(indexA: number, indexB: number) {
@@ -59,15 +63,35 @@ export class Collection<T> extends Array<T> {
     const temp = clone[indexA];
     clone[indexA] = clone[indexB];
     clone[indexB] = temp;
-    return new Collection(...clone);
+    return c(...clone);
   }
 
   randomize() {
-    return new Collection(...shuffle(this));
+    return c(...shuffle(this));
   }
 
   clone() {
-    return new Collection(...this);
+    return c(...this);
+  }
+
+  cloneDeep() {
+    return cloneDeep(this);
+  }
+
+  uniq() {
+    return c(...new Set(this));
+  }
+
+  uniqBy<K extends string | number | symbol>(key: keyof T | ((item: T) => K)): Collection<T> {
+    const seen = new Set();
+    return c(
+      ...this.filter((item) => {
+        const k = typeof key === 'function' ? key(item) : item[key];
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      }),
+    );
   }
 
   toArray() {
