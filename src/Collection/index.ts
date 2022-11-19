@@ -1,32 +1,8 @@
-import { cloneDeep, shuffle } from '../utils/utils';
+import { cloneDeep, Selector, selector, shuffle } from '../utils/utils';
 
 export class Collection<T> extends Array<T> {
-  map<U>(callback: (value: T, index: number, array: T[]) => U): Collection<U> {
-    return c(...super.map(callback));
-  }
-
-  last(): T {
-    return this[this.length - 1];
-  }
-
-  remove(item: T) {
-    return this.filter((i) => i !== item);
-  }
-
-  groupBy<K extends string | number | symbol>(key: keyof T | ((item: T) => K)): Record<K, T[]> {
-    const map: Record<K, T[]> = {} as any;
-    this.forEach((item) => {
-      const group = typeof key === 'function' ? key(item) : (item[key] as K);
-      if (!map[group]) {
-        map[group] = c();
-      }
-      map[group].push(item);
-    });
-    return map;
-  }
-
-  has(item: T) {
-    return this.includes(item);
+  first(): T | undefined {
+    return this.at(0);
   }
 
   at(index: number): T | undefined {
@@ -38,12 +14,20 @@ export class Collection<T> extends Array<T> {
     return this.at(index);
   }
 
-  first(): T | undefined {
-    return this.at(0);
+  has(item: T) {
+    return this.includes(item);
+  }
+
+  last(): T {
+    return this[this.length - 1];
   }
 
   add(item: T) {
     return c(...this, item);
+  }
+
+  remove(item: T) {
+    return this.filter((i) => i !== item);
   }
 
   delete(item: T) {
@@ -56,6 +40,16 @@ export class Collection<T> extends Array<T> {
 
   deleteBy(key: keyof T, value: T[keyof T]) {
     return this.filter((item) => item[key] !== value);
+  }
+
+  groupBy<K extends string | number | symbol>(key: Selector<K, T>): Record<K, T[]> {
+    const map: Record<any, Collection<T>> = {} as any;
+    this.forEach((item) => {
+      const group = selector(key, item) as K;
+      if (!map[group]) map[group] = c();
+      map[group].push(item);
+    });
+    return map;
   }
 
   swap(indexA: number, indexB: number) {
@@ -82,11 +76,11 @@ export class Collection<T> extends Array<T> {
     return c(...new Set(this));
   }
 
-  uniqBy<K extends string | number | symbol>(key: keyof T | ((item: T) => K)): Collection<T> {
+  uniqBy<K extends string | number | symbol>(key: Selector<K, T>): Collection<T> {
     const seen = new Set();
     return c(
       ...this.filter((item) => {
-        const k = typeof key === 'function' ? key(item) : item[key];
+        const k = selector(key, item);
         if (seen.has(k)) return false;
         seen.add(k);
         return true;
