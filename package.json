@@ -32,7 +32,7 @@
   "bugs": {
     "url": "https://github.com/jrishabh55/collections-ts/issues"
   },
-  "homepage": "https://github.com/jrishabh55/collections-ts#readme",
+  "homepage": "https://jrishabh55.github.io/collections-ts/",
   "devDependencies": {
     "@types/jest": "^29.2.3",
     "@types/node": "^18.11.9",
