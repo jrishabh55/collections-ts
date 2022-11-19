@@ -1,4 +1,4 @@
-import { cloneDeep, shuffle, uniq } from './utils';
+import { cloneDeep, selector, shuffle, uniq } from './utils';
 
 it('shuffle an array', () => {
   const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -74,4 +74,22 @@ describe('Clone Deep test', () => {
     // expect(cloned).toEqual(func);
     expect(cloned()).toEqual(func());
   });
+
+  describe('Selector' , () => {
+    test('selector with key as function', () => {
+      const obj = { a: 1, b: 2, c: 3 };
+      expect(selector(it => it.a, obj)).toEqual(1);
+      expect(selector(it => it.b, obj)).toEqual(2);
+      expect(selector(it => it.c, obj)).toEqual(3);
+    });
+
+    test('selector with key as string', () => {
+      const obj = { a: 1, b: 2, c: 3 };
+      expect(selector('a', obj)).toEqual(1);
+      expect(selector('b', obj)).toEqual(2);
+      expect(selector('c', obj)).toEqual(3);
+    });
+
+  });
+
 });

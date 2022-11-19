@@ -9,7 +9,7 @@ export const shuffle = (array: any[]) => {
 
 export const uniq = <T>(array: T[]) => {
   return [...new Set(array)];
-}
+};
 
 export const cloneDeep = <T extends object | Function>(obj: T): T => {
   if (Array.isArray(obj)) {
@@ -28,4 +28,14 @@ export const cloneDeep = <T extends object | Function>(obj: T): T => {
   }
 
   return obj;
-}
+};
+
+export type Selector<K extends string | number | symbol, T> = keyof T | ((item: T) => K);
+
+export const selector = <T, K extends string | number | symbol>(selector: Selector<K, T>, item: T) => {
+  if (typeof selector === 'function') {
+    return selector(item);
+  }
+
+  return item[selector];
+};
