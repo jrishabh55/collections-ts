@@ -1,8 +1,6 @@
 # Collections - TS
 
-An easy to extend the exiting array and add some very common utilities.
-
-
+An easy to extend the existing array and add some very common utilities.
 
 
 
@@ -14,7 +12,7 @@ An easy to extend the exiting array and add some very common utilities.
 
 ## Documentation
 ```js
-import c from '@jrishabh55/colletion-ts'
+import c from '@jrishabh55/collections-ts'
 
 const values = c(1, 2, 3, 4, 1, 3, 2)
 
